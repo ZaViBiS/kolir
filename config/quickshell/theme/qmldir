@@ -1,0 +1,4 @@
+singleton Colors 1.0 Colors.qml
+singleton Dimensions 1.0 Dimensions.qml
+singleton Typography 1.0 Typography.qml
+Button 1.0 Button.qml

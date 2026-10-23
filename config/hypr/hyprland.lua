@@ -34,8 +34,9 @@ hl.monitor({
 -- Set programs that you use
 local terminal = "foot"
 local fileManager = "nautilus"
-local menu = "hyprlauncher"
-local random_wallpaper = "/.config/hypr/scripts/random-wallpaper.sh"
+local menu = "qs ipc call launcher toggle"
+local random_wallpaper = "sh ~/.config/hypr/scripts/random-wallpaper.sh"
+local select_wallpaper = "sh ~/.config/hypr/scripts/select_wallpaper.sh"
 
 -------------------
 ---- AUTOSTART ----
@@ -47,7 +48,9 @@ local random_wallpaper = "/.config/hypr/scripts/random-wallpaper.sh"
 -- Or execute your favorite apps at launch like this:
 --
 hl.on("hyprland.start", function()
-	hl.exec_cmd("quickshell -c bar & awww-daemon")
+	hl.exec_cmd("quickshell & awww-daemon & kdeconnect-indicator")
+	hl.exec_cmd("gsettings set org.gnome.desktop.interface cursor-theme 'Mocu-White-Left'")
+	hl.exec_cmd("gsettings set org.gnome.desktop.interface cursor-size 16")
 end)
 
 -------------------------------
@@ -58,6 +61,9 @@ end)
 
 hl.env("XCURSOR_SIZE", "16")
 hl.env("HYPRCURSOR_SIZE", "16")
+
+hl.env("XCURSOR_THEME", "Mocu-White-Left")
+hl.env("HYPRCURSOR_THEME", "Mocu-White-Left")
 
 -----------------------
 ----- PERMISSIONS -----
@@ -84,8 +90,8 @@ hl.env("HYPRCURSOR_SIZE", "16")
 -- Refer to https://wiki.hypr.land/Configuring/Basics/Variables/
 hl.config({
 	general = {
-		gaps_in = 5,
-		gaps_out = 5,
+		gaps_in = 4,
+		gaps_out = 8,
 
 		border_size = 2,
 
@@ -99,7 +105,7 @@ hl.config({
 	},
 
 	decoration = {
-		rounding = 8,
+		rounding = 12,
 		rounding_power = 2,
 
 		-- Change transparency of focused and unfocused windows
@@ -115,10 +121,13 @@ hl.config({
 
 		blur = {
 			enabled = true,
-			size = 7,
-			passes = 2,
-			vibrancy = 0.1696,
+			size = 4,
+			passes = 3,
+			ignore_opacity = true,
+			vibrancy = 0.5,
+			vibrancy_darkness = 0.2,
 			new_optimizations = true,
+			xray = false,
 		},
 	},
 
@@ -242,6 +251,22 @@ hl.device({
 
 local mainMod = "SUPER" -- Sets "Windows" key as main modifier
 
+-- TODO: set also for print screen button
+-- my binds --
+-- screenshot --
+hl.bind(mainMod .. " + X", hl.dsp.exec_cmd('grim -g "$(slurp)" - | wl-copy'))
+hl.bind(mainMod .. " + SHIFT + X", hl.dsp.exec_cmd("grim - | wl-copy"))
+
+-- wallpaper --
+hl.bind(mainMod .. " + CTRL + ALT + T", hl.dsp.exec_cmd(random_wallpaper))
+hl.bind(mainMod .. " + CTRL + T", hl.dsp.exec_cmd(select_wallpaper))
+
+-- video recording --
+-- hl.bind(
+-- 	mainMod .. " + R",
+-- 	hl.dsp.exec_cmd([[wl-screenrec -g "$(slurp)" -a -f "$HOME/Videos/rec_$(date +'%Y-%m-%d_%H-%M-%S').mp4"]])
+-- )
+
 -- Example binds, see https://wiki.hypr.land/Configuring/Basics/Binds/ for more
 hl.bind(mainMod .. " + Q", hl.dsp.exec_cmd(terminal))
 local closeWindowBind = hl.bind(mainMod .. " + C", hl.dsp.window.close())
@@ -252,7 +277,7 @@ hl.bind(
 )
 hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
 hl.bind(mainMod .. " + V", hl.dsp.window.float({ action = "toggle" }))
-hl.bind(mainMod .. " + R", hl.dsp.exec_cmd(menu))
+hl.bind(mainMod .. " + D", hl.dsp.exec_cmd(menu))
 hl.bind(mainMod .. " + P", hl.dsp.window.pseudo())
 -- HACK: i dont know what is this doing, but i need j
 -- hl.bind(mainMod .. " + J", hl.dsp.layout("togglesplit")) -- dwindle only
@@ -365,7 +390,22 @@ hl.window_rule({
 
 hl.window_rule({
 	match = {
-		class = "deadlock", -- або "steam_app_1422450" (якщо запускається через Proton з іншим ідентифікатором)
+		class = "deadlock",
 	},
 	immediate = true,
+})
+
+hl.window_rule = {
+	opacity = "0.95 0.7",
+	blur = true,
+	match = {
+		class = "^(zen|-alpha|-browser)?$",
+	},
+}
+
+hl.layer_rule({
+	name = "bar-blur",
+	match = { namespace = "bar" },
+	blur = true,
+	ignore_alpha = 0,
 })
