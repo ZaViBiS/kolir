@@ -4,5 +4,5 @@ import QtQuick
 QtObject {
     id: root
 
-    readonly property string mainFont: "Google Sans"
+    readonly property string mainFont: "Aseprite"
 }

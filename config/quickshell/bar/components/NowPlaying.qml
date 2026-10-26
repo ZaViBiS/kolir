@@ -2,29 +2,55 @@ import "../../theme"
 import Quickshell.Services.Mpris
 import QtQuick
 
-Item {
+// NowPlaying — sunken поле з піснею
+PixelBox {
     id: root
+    style: "sunken"
+    bgColor: Colors.surfaceContainerLow
 
-    // активний плеєр: той, що грає, інакше перший зі списку
     readonly property var player: {
-        const list = Mpris.players.values;
-        return list.find(p => p.isPlaying) ?? list[0] ?? null;
+        const list = Mpris.players.values
+        return list.find(p => p.isPlaying) ?? list[0] ?? null
     }
+    readonly property bool hasPlayer: player !== null
+    readonly property string trackText: player
+        ? ((player.trackArtist ? player.trackArtist + " - " : "") + (player.trackTitle || ""))
+        : ""
 
-    visible: player !== null
-    implicitWidth: 200
-    implicitHeight: 28
+    visible: hasPlayer && trackText !== ""
 
-    Text {
-        id: label
+    implicitWidth:  220
+    implicitHeight: Dimensions.bar.height - 4
+    clip: true
+
+    Row {
         anchors.centerIn: parent
-        color: Colors.onSurface
-        font.family: "Google Sans"
-        font.pixelSize: 16
-        font.styleName: "Bold"
-        elide: Text.ElideRight
-        width: Math.min(implicitWidth, 190)
+        spacing: 4
+        height: parent.height
 
-        text: root.player ? (root.player.trackArtist ? root.player.trackArtist + " - " : "") + root.player.trackTitle : ""
+        Text {
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.verticalCenterOffset: 1
+            text: "~"
+            color: Colors.primary
+            font.family: Typography.mainFont
+            font.pixelSize: 14
+            font.hintingPreference: Font.PreferFullHinting
+            renderType: Text.NativeRendering
+        }
+
+        Text {
+            id: trackLabel
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.verticalCenterOffset: 1
+            text: root.trackText
+            color: Colors.onSurface
+            font.family: Typography.mainFont
+            font.pixelSize: 14
+            font.hintingPreference: Font.PreferFullHinting
+            renderType: Text.NativeRendering
+            elide: Text.ElideRight
+            width: 184
+        }
     }
 }

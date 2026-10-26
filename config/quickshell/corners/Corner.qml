@@ -29,16 +29,16 @@ PanelWindow {
         rotation: [0, 90, 270, 180][win.pos]
 
         onPaint: {
-            var ctx = getContext("2d");
-            var r = win.radius;
-            ctx.reset();
-            ctx.fillStyle = win.fill;
-            ctx.beginPath();
-            ctx.moveTo(0, 0);
-            ctx.lineTo(r, 0);
-            ctx.arc(r, r, r, Math.PI * 1.5, Math.PI, true);
-            ctx.closePath();
-            ctx.fill();
+            var ctx = getContext("2d")
+            var r = win.radius
+            ctx.reset()
+            ctx.fillStyle = win.fill
+            ctx.beginPath()
+            ctx.moveTo(0, 0)
+            ctx.lineTo(r, 0)
+            ctx.arc(r, r, r, Math.PI * 1.5, Math.PI, true)
+            ctx.closePath()
+            ctx.fill()
         }
     }
 }

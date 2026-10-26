@@ -17,12 +17,12 @@ QtObject {
     }
 
     readonly property QtObject bar: QtObject {
-        readonly property int height: 40
+        readonly property int height: 30
     }
-    // HACK: просто скопіював з gemini
+
     readonly property QtObject padding: QtObject {
         readonly property int horizontal: 10
-        readonly property int vertical: 6
+        readonly property int vertical: 4
     }
 
     readonly property QtObject spacing: QtObject {

@@ -3,11 +3,13 @@ import "bar"
 import "launcher"
 import "corners"
 import "notification"
+import "osd"
 
 ShellRoot {
     Bar {}
     Launcher {}
     Notification {}
+    VolumeOsd {}
 
     Variants {
         model: Quickshell.screens
